@@ -1,6 +1,6 @@
 {
   "name": "hardhat-api-builder",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Hardhat TypeScript plugin to auto-generate API documentation",
   "repository": "github:gnomadic/hardhat-api-builder",
   "author": "gn0madic",

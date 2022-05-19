@@ -1,34 +1,41 @@
-# Hardhat API Builder plugin
+# hardhat-api-builder
+
+_Autogenerate your Typescript bindings so you can integrate your contracts with a dApp easily_
+
+## What
 
 This is a simple plugin to auto-generate an API for solidity files.  The plugin will log all public functions to the console with the `logapi` command, or it can generate typescript API bindings with the `tsgen` command.
-
 
 ## Installation
 
 ```bash
 npm install hardhat-api-builder --save-dev
 ```
-And add the following to your hardhat.config.js:
 
-```bash
+Import the plugin in your `hardhat.config.js`:
+
+```js
 require("hardhat-api-builder");
 ```
 
-Or, if you are using TypeScript, add this to your hardhat.config.ts:
+Or if you are using TypeScript, in your `hardhat.config.ts`:
 
-```bash
+```ts
 import "hardhat-api-builder";
 ```
 
-## Using the plugin
+## Tasks
 
-### API Logger
+This plugin adds the following tasks to Hardhat:
 
-Run the following command to log the public methods on a Contract:
+### logapi
 
 ```bash
 npx hardhat logapi --contract MyContractName
 ```
+
+This will log all public and external functions and their parameters to the console, for example:
+
 
 This will log the following output:
 
@@ -55,63 +62,48 @@ safeTransferFrom(address, address, uint256)
 
 ```
 
-
-### Typescript bindings generation
-
-Run the following command to generate the typescript bindings for the public methods on a Contract:
+### tsgen
 
 ```bash
 npx hardhat tsgen --contract MyContractName
 ```
 
-This will log the following output:
+This will autogenate a MyContractName.ts file which contains Typescript bindings for every public and external method in your contract, as well as a MyContractName_abi.json file.  With these two files you can simply copy and paste them into your dapp so you can interact with your smart contract.
+
+The generated JSON file will contain the following:
 
 ```bash
-------------------------------------------------------
-Logging API for: MyContractName
-------------------------------------------------------
 
-    async DEFAULT_ADMIN_ROLE() {
-        return this.bountyQuestion.DEFAULT_ADMIN_ROLE();
-      }
-    
+import { BigNumber, ethers, providers } from "ethers";
+import contract from "./BountyQuestion_abi.json";
 
-    async MINTER_ROLE() {
-        return this.bountyQuestion.MINTER_ROLE();
-      }
-    
+const contractAddress = "<DEPLOYED_CONTRACT_ADDRESS_HERE>";
+const abi = contract;
 
-    async approve(to: string , tokenId: BigNumber ) {
-        return this.bountyQuestion.approve(to, tokenId);
-      }
-    
+export default class BountyQuestion {
+  bountyQuestion: any;
 
-    async balanceOf(owner: string ) {
-        return this.bountyQuestion.balanceOf(owner);
-      }
-    
+  constructor(provider: providers.Web3Provider) {
+    this.bountyQuestion = new ethers.Contract(contractAddress, abi, provider);
+  }
 
-    async burn(tokenId: BigNumber ) {
-        return this.bountyQuestion.burn(tokenId);
-      }
-    
+  async DEFAULT_ADMIN_ROLE() {
+    return await this.bountyQuestion.DEFAULT_ADMIN_ROLE();
+  }
 
-    async getApproved(tokenId: BigNumber ) {
-        return this.bountyQuestion.getApproved(tokenId);
-      }
-    
-
-    async getRoleAdmin(role: bytes32 ) {
-        return this.bountyQuestion.getRoleAdmin(role);
-      }
-      
-
-
-      ...
-
-...
+  ...
 
 ```
+
+
+
+
+
+
+
+
+
+
 
 
 ## Plugin Devleopment
