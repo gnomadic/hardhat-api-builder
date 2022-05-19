@@ -29,8 +29,8 @@ const logapi = async (hre: HardhatRuntimeEnvironment, contractName: string) => {
 };
 
 
-task("logapi", "log  your api")
-    .addParam("contract", "Contract name to sync") // add contract parameters
+task("logapi", "log your contract's public methods from all dependencies")
+    .addParam("contract", "Contract name to sync")
     .setAction(async (taskArgs, hre) => {
         await hre.run("compile");
 

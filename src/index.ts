@@ -5,6 +5,7 @@ import path from "path";
 
 import { ExampleHardhatRuntimeEnvironmentField } from "./ExampleHardhatRuntimeEnvironmentField";
 import logapi from "./tasks.ts/logapi";
+import tsgen from "./tasks.ts/tsgen";
 // This import is needed to let the TypeScript compiler know that it should include your type
 // extensions in your npm package's types file.
 import "./type-extensions";
@@ -48,4 +49,5 @@ extendEnvironment((hre) => {
   // needed.
   // hre.logapi = lazyObject(() => new logapi());
   hre.logapi = logapi;
+  hre.tsgen = tsgen;
 });

@@ -33,6 +33,11 @@ declare module "hardhat/types/runtime" {
       hre: HardhatRuntimeEnvironment,
       contract: string,
     ) => Promise<void>;
+
+    tsgen: (
+      hre: HardhatRuntimeEnvironment,
+      contract: string,
+    ) => Promise<void>;
   }
 }
 
