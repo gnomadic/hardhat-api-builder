@@ -1,12 +1,12 @@
 # Hardhat API Builder plugin
 
-This is a simple plugin to auto-generate an API for solidity files.  The current version will log all public methods to the console, however future versions can auto-generate a Typescript file with all the boilerplate required to integreate your smart contract with a web3 dApp.
+This is a simple plugin to auto-generate an API for solidity files.  The plugin will log all public functions to the console with the `logapi` command, or it can generate typescript API bindings with the `tsgen` command.
 
 
 ## Installation
 
 ```bash
-npm install hardhat-gas-reporter --save-dev
+npm install hardhat-api-builder --save-dev
 ```
 And add the following to your hardhat.config.js:
 
@@ -56,6 +56,62 @@ safeTransferFrom(address, address, uint256)
 ```
 
 
+### Typescript bindings generation
+
+Run the following command to generate the typescript bindings for the public methods on a Contract:
+
+```bash
+npx hardhat tsgen --contract MyContractName
+```
+
+This will log the following output:
+
+```bash
+------------------------------------------------------
+Logging API for: MyContractName
+------------------------------------------------------
+
+    async DEFAULT_ADMIN_ROLE() {
+        return this.bountyQuestion.DEFAULT_ADMIN_ROLE();
+      }
+    
+
+    async MINTER_ROLE() {
+        return this.bountyQuestion.MINTER_ROLE();
+      }
+    
+
+    async approve(to: string , tokenId: BigNumber ) {
+        return this.bountyQuestion.approve(to, tokenId);
+      }
+    
+
+    async balanceOf(owner: string ) {
+        return this.bountyQuestion.balanceOf(owner);
+      }
+    
+
+    async burn(tokenId: BigNumber ) {
+        return this.bountyQuestion.burn(tokenId);
+      }
+    
+
+    async getApproved(tokenId: BigNumber ) {
+        return this.bountyQuestion.getApproved(tokenId);
+      }
+    
+
+    async getRoleAdmin(role: bytes32 ) {
+        return this.bountyQuestion.getRoleAdmin(role);
+      }
+      
+
+
+      ...
+
+...
+
+```
 
 
 ## Plugin Devleopment
