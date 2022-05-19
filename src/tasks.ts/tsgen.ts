@@ -20,25 +20,16 @@ const tsgen = async (hre: HardhatRuntimeEnvironment, contractName: string) => {
         if (element.name == undefined) {
             return;
         }
-
-        if (element.stateMutability == "view") {
-            genViewFunction(element, contractName);
+        if (element.type !== 'function') {
+            return;
         }
 
+        genFunction(element, contractName);;
 
 
 
 
-        // console.log(`------------------------------------------------------`);
 
-        // const params = `${element.inputs.map((input: any) => input.type).join(", ")}`;
-
-        // console.log(`${element.name}(\x1b[0m\x1b[36m${params}\x1b[0m)`)
-
-
-
-
-        // console.log(`------------------------------------------------------`);
 
 
     });
@@ -46,23 +37,46 @@ const tsgen = async (hre: HardhatRuntimeEnvironment, contractName: string) => {
 
 };
 
-// async view${element.name}(tokenId: BigNumber) {
 
 
-const genViewFunction = async (element: any, contractName: string) => {
+const genFunction = async (element: any, contractName: string) => {
 
+    let params = element.inputs;
 
-    const params = `${element.inputs.map((input: any) => `${input.type} ${input.name}`).join(", ")}`;
+    // if (element.stateMutability == 'payable') {
+    //     params.push({
+    //         name: 'value',
+    //         type: 'uint256'
+    //     })
+    // }
+
+    params.map((param: any) => {
+        if (param.type == 'uint256') {
+            param.type = `BigNumber`
+        } else if (param.type == 'address') {
+            param.type = `string`
+        } else {
+            param.type = param.type
+        }
+    });
+
+    const typeScriptParams = `${params.map((input: any) => `${input.name}: ${input.type} `).join(", ")}`;
+
+    const ethersParams = `${element.inputs.map((input: any) => input.name).join(", ")}`
+    // if (element.stateMutability == 'payable') {
+    //     ethersParams.concat(`, {value: value}`)
+    // }
 
 
     const declaration = `
-    async view_${element.name}(${params}) {
-        return this.${lowercaseFirstLetter(contractName)}.${element.name}(${element.inputs.map((input: any) => input.name).join(", ")});
+    async ${element.name}(${typeScriptParams}) {
+        return this.${lowercaseFirstLetter(contractName)}.${element.name}(${ethersParams});
       }
-    `
-
+    `;
     console.log(declaration);
 };
+
+
 
 const lowercaseFirstLetter = (input: string) => {
     return input.charAt(0).toLowerCase() + input.slice(1);
